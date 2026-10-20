@@ -1,0 +1,45 @@
+train:
+  _target_: w0.datasets.robotwin_posttrain.RobotwinPosttrainDataset
+  dataset_root: ${oc.env:W0_ROBOTWIN_DATA,data/robotwin}
+  is_training_set: true
+  samples_per_epoch: null
+  seed: ${seed}
+  val_set_proportion: 0.01
+  pretrained_norm_stats: ${oc.env:W0_ROBOTWIN_STATS,assets/robotwin/normalization.json}
+  max_action_offset: ${model.max_action_offset}
+  action_horizon: ${model.action_horizon}
+  action_chunk_size: ${model.action_chunk_size}
+  video_plan_horizon: ${model.video_plan_horizon}
+  action_video_freq_ratio: ${model.video_action_stride}
+  text_embedding_cache_dir: ${data.train.dataset_root}/text_embeds_cache
+  sampling_stride: 2
+  epoch_sampling: all_valid_windows
+  color_jitter:
+    enabled: true
+    brightness: 0.2
+    contrast: 0.2
+    saturation: 0.2
+    hue: 0.0
+  processor:
+    _target_: w0.datasets.robotwin_posttrain.RobotwinPosttrainProcessor
+    stats_path: ${data.train.pretrained_norm_stats}
+val:
+  _target_: ${data.train._target_}
+  dataset_root: ${data.train.dataset_root}
+  is_training_set: false
+  samples_per_epoch: 128
+  seed: ${seed}
+  val_set_proportion: ${data.train.val_set_proportion}
+  pretrained_norm_stats: ${data.train.pretrained_norm_stats}
+  max_action_offset: ${model.max_action_offset}
+  action_horizon: ${model.action_horizon}
+  action_chunk_size: ${model.action_chunk_size}
+  video_plan_horizon: ${model.video_plan_horizon}
+  action_video_freq_ratio: ${model.video_action_stride}
+  text_embedding_cache_dir: ${data.train.text_embedding_cache_dir}
+  sampling_stride: ${data.train.sampling_stride}
+  epoch_sampling: ${data.train.epoch_sampling}
+  color_jitter: ${data.train.color_jitter}
+  processor:
+    _target_: ${data.train.processor._target_}
+    stats_path: ${data.train.processor.stats_path}

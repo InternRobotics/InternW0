@@ -1,0 +1,38 @@
+# @package _global_
+defaults:
+  - posttrain_robotwin
+  - _self_
+
+ckpt: ${oc.env:W0_ROBOTWIN_CHECKPOINT,null}
+gpu_id: 0
+model:
+  load_text_encoder: true
+
+EVALUATION:
+  robotwin_root: ${oc.env:ROBOTWIN_ROOT,external/RoboTwin}
+  policy_name: w0_policy
+  task_name: null
+  task_config: demo_randomized
+  instruction_type: unseen
+  eval_num_episodes: 15
+  output_dir: ${oc.env:W0_OUTPUT_DIR,outputs}/robotwin/evaluation/${now:%Y%m%d_%H%M%S}
+  action_horizon: 64
+  chunks_per_video_prefill: 4
+  num_inference_steps: 10
+  sigma_shift: null
+  text_cfg_scale: 1.0
+  negative_prompt: ""
+  rand_device: cpu
+  tiled: false
+  timing_enabled: false
+  training_config: ${oc.env:W0_ROBOTWIN_TRAINING_CONFIG,null}
+  control_mode: fixed_period
+  target_fps: 25.0
+  step_limit_reference_fps: 12.5
+  dataset_stats_path: null
+  device: cuda
+
+MULTIRUN:
+  enabled: false
+  num_gpus: 8
+  max_tasks_per_gpu: 1

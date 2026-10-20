@@ -1,0 +1,36 @@
+train:
+  _target_: w0.datasets.domain_video_dataset.DomainVideoDataset
+  domain_registry_path: configs/data/domain_banks/internw0_domains.json
+  domain_stats_path: ${oc.env:W0_DOMAIN_STATS,assets/domain_data/pretrain_stats.json}
+  text_embedding_cache_dir: ${oc.env:W0_DOMAIN_TEXT_CACHE,assets/domain_data/text_embeds}
+  text_encoder_id: truewan22
+  action_horizon: ${model.action_horizon}
+  action_chunk_size: ${model.action_chunk_size}
+  action_video_freq_ratio: 8
+  target_fps: 50.0
+  video_size: [384, 320]
+  context_len: 128
+  is_training_set: true
+  val_set_proportion: 0.05
+  seed: ${seed}
+  samples_per_epoch: 100000
+  domain_weights: null
+  max_sources_per_domain: null
+val:
+  _target_: ${data.train._target_}
+  domain_registry_path: ${data.train.domain_registry_path}
+  domain_stats_path: ${data.train.domain_stats_path}
+  text_embedding_cache_dir: ${data.train.text_embedding_cache_dir}
+  text_encoder_id: ${data.train.text_encoder_id}
+  action_horizon: ${data.train.action_horizon}
+  action_chunk_size: ${data.train.action_chunk_size}
+  action_video_freq_ratio: ${data.train.action_video_freq_ratio}
+  target_fps: ${data.train.target_fps}
+  video_size: ${data.train.video_size}
+  context_len: ${data.train.context_len}
+  is_training_set: false
+  val_set_proportion: ${data.train.val_set_proportion}
+  seed: ${seed}
+  samples_per_epoch: 1100
+  domain_weights: ${data.train.domain_weights}
+  max_sources_per_domain: ${data.train.max_sources_per_domain}

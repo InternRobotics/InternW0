@@ -1,0 +1,22 @@
+# Plain PyTorch DDP (DistributedDataParallel) -- no DeepSpeed.
+#
+# Memory note: A 6B-param model with Adam optimizer (fp32 master weights +
+# momentum + variance) requires ~36 GB per GPU without ZeRO sharding.
+# Ensure each device has sufficient VRAM, or reduce batch size / enable
+# gradient checkpointing.
+#
+# DDP tuning knobs (bucket_cap_mb, find_unused_parameters, static_graph)
+# are set in code via DistributedDataParallelKwargs passed to Accelerator.
+
+compute_environment: LOCAL_MACHINE
+debug: false
+distributed_type: MULTI_GPU
+mixed_precision: bf16
+
+machine_rank: 0
+main_training_function: main
+num_machines: 1
+num_processes: 1
+rdzv_backend: static
+same_network: true
+use_cpu: false

@@ -1,0 +1,36 @@
+# @package _global_
+defaults:
+  - posttrain_libero
+  - _self_
+
+ckpt: ${oc.env:W0_LIBERO_CHECKPOINT,null}
+gpu_id: 0
+model:
+  load_text_encoder: true
+
+EVALUATION:
+  task_suite_name: libero_goal
+  task_id: 0
+  num_trials: 50
+  seed: 42
+  settle_steps: 30
+  settle_action: [0, 0, 0, 0, 0, 0, -1]
+  camera_height: 256
+  camera_width: 256
+  image_transform: rotate_180
+  max_steps_by_suite:
+    libero_spatial: 600
+    libero_object: 600
+    libero_goal: 600
+    libero_10: 700
+  output_dir: ${oc.env:W0_OUTPUT_DIR,outputs}/libero/evaluation/${now:%Y-%m-%d}_${now:%H-%M-%S}
+  action_horizon: 64
+  chunks_per_video_prefill: 1
+  num_inference_steps: ${eval_num_inference_steps}
+  dataset_stats_path: ${oc.env:W0_LIBERO_STATS,assets/libero/normalization.json}
+  text_cache_dir: ${oc.env:W0_LIBERO_TEXT_CACHE,assets/libero/text_embeds_cache}
+  device: cuda
+
+MULTIRUN:
+  task_suite_names: [libero_goal, libero_10]
+  num_gpus: 8

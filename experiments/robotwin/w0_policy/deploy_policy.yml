@@ -1,0 +1,25 @@
+# Basic experiment configuration
+policy_name: w0_policy
+task_name: null
+task_config: null
+ckpt_setting: null
+seed: 0
+instruction_type: unseen
+eval_num_episodes: 100
+
+# w0 policy args
+sim_cfg_path: null
+resolved_config_path: null
+sim_cfg_name: eval_robotwin.yaml
+mixed_precision: bf16
+device: cuda
+dataset_stats_path: null
+action_horizon: null
+chunks_per_video_prefill: 2
+num_inference_steps: 10
+sigma_shift: null
+text_cfg_scale: 1.0
+negative_prompt: ""
+rand_device: cpu
+tiled: false
+timing_enabled: false

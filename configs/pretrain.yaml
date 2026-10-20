@@ -1,0 +1,37 @@
+# @package _global_
+defaults:
+  - train
+  - override /data: pretrain
+  - override /model: w0
+  - _self_
+
+model:
+  domain_registry_path: ${data.train.domain_registry_path}
+  proprio_dim: null
+  action_horizon: 64
+  action_chunk_size: 16
+  action_dit_config:
+    action_dim: 26
+    num_soft_prompts: 8
+    soft_prompt_domains: []
+    soft_prompt_init_std: 0.02
+
+batch_size: 2
+num_workers: 8
+history_aware_batching: false
+learning_rate: 5.0e-5
+soft_prompt_lr_scale: 0.1
+optimizer_group_max_numel: 100000000
+optimizer_fused: true
+weight_decay: 0.01
+num_epochs: 15
+save_every: 2500
+eval_every: 500
+resume: null
+init_checkpoint: null
+init_soft_prompts: false
+output_dir: ${oc.env:W0_OUTPUT_DIR,outputs}/pretrain/${now:%Y-%m-%d}_${now:%H-%M-%S}
+wandb:
+  enabled: true
+  mode: offline
+  name: internw0_pretrain

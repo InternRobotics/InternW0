@@ -1,0 +1,96 @@
+_target_: w0.runtime.create_w0
+model_id: ${oc.env:W0_WAN_MODEL_DIR,assets/wan22}
+tokenizer_model_id: Wan-AI/Wan2.1-T2V-1.3B
+tokenizer_max_len: 128
+load_text_encoder: false
+proprio_dim: ${data.train.processor.proprio_output_dim}
+redirect_common_files: false
+mot_checkpoint_mixed_attn: true
+action_dit_pretrained_path: null
+skip_dit_load_from_pretrain: true
+legacy_checkpoint_config: null
+observation_encoder: dino
+dino_config:
+  model_name: dinov3-vitb16-hf
+  weights_path: ${oc.env:W0_DINO_WEIGHTS,assets/dinov3-vitb16-pretrain-lvd1689m}
+  input_resolution:
+  - 384
+  - 320
+  feature_dim: 768
+  patch_size: 16
+  use_cls_token: false
+  normalize_features: false
+  encode_microbatch_size: 16
+checkpoint_observation_encoder_adapt: false
+action_horizon: 64
+action_chunk_size: 16
+max_action_offset: 0
+action_train_timestep_mode: per_chunk
+future_training_mode: idm
+idm_video_cond_noise_prob: 0.5
+idm_checkpoint_full_layer: true
+idm_checkpoint_layer_stride: 1
+action_obs_downsample_factor: 1
+chunk_kv_editor_num_queries: 32
+num_history_frames: 0
+action_video_read_mode: future
+video_rope_frame_stride: 1
+video_dit_config:
+  compact_timestep_embedding: true
+  has_image_input: false
+  patch_size:
+  - 1
+  - 2
+  - 2
+  in_dim: 48
+  hidden_dim: 3072
+  ffn_dim: 14336
+  freq_dim: 256
+  text_dim: 4096
+  out_dim: 48
+  num_heads: 24
+  attn_head_dim: 128
+  num_layers: 30
+  eps: 1.0e-06
+  seperated_timestep: true
+  require_clip_embedding: false
+  require_vae_embedding: false
+  fuse_vae_embedding_in_latents: true
+  use_gradient_checkpointing: ${model.mot_checkpoint_mixed_attn}
+  video_attention_mask_mode: first_frame_causal
+  action_conditioned: false
+  action_dim: ${model.action_dit_config.action_dim}
+  action_group_causal_mask_mode: group_diagonal
+action_dit_config:
+  num_soft_prompts: 0
+  soft_prompt_domains: []
+  soft_prompt_init_std: 0.02
+  domain_configs: []
+  action_dim: ${data.train.processor.action_output_dim}
+  hidden_dim: 1024
+  ffn_dim: 4096
+  num_heads: 24
+  attn_head_dim: 128
+  num_layers: 30
+  text_dim: 4096
+  freq_dim: 256
+  eps: 1.0e-06
+  autoregressive_teacher_forcing: true
+  action_chunk_size: ${model.action_chunk_size}
+  action_teacher_forcing_mask_mode: stage1_chunkwise
+  use_gradient_checkpointing: ${model.mot_checkpoint_mixed_attn}
+video_scheduler:
+  train_shift: 5.0
+  infer_shift: 5.0
+  num_train_timesteps: 1000
+action_scheduler:
+  train_shift: 5.0
+  infer_shift: 5.0
+  num_train_timesteps: 1000
+loss:
+  lambda_action: 1.0
+  lambda_action_prior: 1.0
+video_plan_horizon: ${model.action_horizon}
+video_action_stride: ${data.train.action_video_freq_ratio}
+video_plan_steps: 10
+domain_registry_path: null

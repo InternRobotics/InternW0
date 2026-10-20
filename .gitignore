@@ -1,0 +1,38 @@
+# Python generated files
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local environments
+.env
+.venv/
+venv/
+
+# Local assets, data, outputs, and caches
+assets/*
+!assets/w0-title.svg
+/data/
+external/
+outputs/
+runs/
+.cache/
+checkpoints/
+wandb/
+
+# Large model artifacts
+*.pt
+*.safetensors
+*.bin
+*.onnx
+
+# Local editors and logs
+.vscode/
+.idea/
+.DS_Store
+*.log
+*.swp
